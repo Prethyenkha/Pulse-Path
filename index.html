@@ -1,0 +1,1099 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - Pulse Path Healthcare</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Color Variables */
+        :root {
+            --primary-green: #4CAF50;
+            --dark-green: #2e7d32;
+            --light-green: #81c784;
+            --lighter-green: #c8e6c9;
+            --text-green: #1b5e20;
+            --text-light-green: #43a047;
+        }
+
+        /* Global Text Colors */
+        body {
+            color: var(--text-green);
+        }
+
+        /* Global Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-100%); }
+            to { transform: translateX(0); }
+        }
+
+        @keyframes float {
+            0% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+            100% { transform: translateY(0px); }
+        }
+
+        @keyframes ripple {
+            0% { transform: scale(1); opacity: 1; }
+            100% { transform: scale(1.5); opacity: 0; }
+        }
+
+        /* Enhanced Container Styles */
+        .container {
+            background: #ffffff;
+            min-height: 100vh;
+            transition: all 0.3s ease;
+        }
+
+        /* Enhanced Header Styles */
+        header {
+            background: #ffffff;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            padding: 20px 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .logo {
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* Brand Name */
+        .brand-name {
+            background: linear-gradient(45deg, var(--dark-green), var(--primary-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        .brand-name:hover {
+            transform: scale(1.05);
+        }
+
+        /* Enhanced Navigation Styles */
+        .main-nav {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-light-green);
+            padding: 12px 20px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            background: white;
+        }
+
+        .nav-link:hover {
+            color: var(--primary-green);
+            background: var(--lighter-green);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .nav-link.active {
+            background: var(--primary-green);
+            color: white;
+            font-weight: 500;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        .nav-link i {
+            transition: transform 0.3s ease;
+        }
+
+        .nav-link:hover i {
+            transform: scale(1.2) rotate(5deg);
+        }
+
+        /* Enhanced Dashboard Grid Styles */
+        .dashboard-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            padding: 20px;
+            animation: fadeIn 0.5s ease-out forwards;
+        }
+
+        .dashboard-card {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+        }
+
+        .dashboard-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .dashboard-card-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--text-green);
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        .dashboard-card-count {
+            color: var(--primary-green);
+            background: var(--lighter-green);
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 500;
+        }
+
+        /* Enhanced List Item Styles */
+        .dashboard-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .dashboard-list-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .dashboard-list-item:hover {
+            background: #f0f0f0;
+            transform: translateX(5px);
+        }
+
+        .dashboard-item-info {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .dashboard-item-title {
+            color: var(--text-green);
+            font-weight: 500;
+        }
+
+        .dashboard-item-subtitle {
+            color: var(--text-light-green);
+            font-size: 0.9em;
+        }
+
+        .dashboard-item-status {
+            color: var(--primary-green);
+        }
+
+        /* Enhanced Button Styles */
+        .btn-view-all {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            padding: 12px;
+            margin-top: 20px;
+            background: var(--lighter-green);
+            border: none;
+            border-radius: 8px;
+            color: var(--primary-green);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-view-all:hover {
+            background: var(--light-green);
+            color: white;
+        }
+
+        /* Enhanced Status Indicators */
+        .status-active {
+            color: var(--primary-green);
+            font-size: 0.9em;
+            padding: 5px 12px;
+            background: var(--lighter-green);
+            border-radius: 15px;
+        }
+
+        /* Loading State */
+        .loading-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 15px;
+            padding: 30px;
+            color: var(--text-light-green);
+        }
+
+        .loading-state i {
+            color: var(--primary-green);
+            font-size: 2em;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 30px;
+            color: var(--text-light-green);
+        }
+
+        .empty-state i {
+            font-size: 3em;
+            margin-bottom: 15px;
+            animation: float 3s ease-in-out infinite;
+        }
+
+        /* SOS Button */
+        .sos-button {
+            background: var(--lighter-green);
+            color: var(--primary-green);
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .sos-button:hover {
+            background: var(--light-green);
+            color: white;
+        }
+
+        .sos-button.pulsing {
+            animation: pulse 2s infinite;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .dashboard-grid {
+                grid-template-columns: 1fr;
+                padding: 10px;
+            }
+
+            .main-nav {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .nav-link {
+                width: 100%;
+                justify-content: flex-start;
+            }
+        }
+
+        /* User Info Section */
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .btn-logout {
+            background: #f8f9fa;
+            color: #333;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-logout:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        #userEmail {
+            color: var(--text-light-green);
+        }
+
+        /* Confirmation Dialog */
+        .confirmation-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .confirmation-dialog {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            text-align: center;
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .warning-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
+        .confirmation-buttons {
+            display: flex;
+            gap: 15px;
+            margin-top: 25px;
+            justify-content: center;
+        }
+
+        .confirm-btn, .cancel-btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .confirm-btn {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        .cancel-btn {
+            background: var(--lighter-green);
+            color: var(--text-green);
+        }
+
+        .confirm-btn:hover, .cancel-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+
+        /* Error Message Display */
+        .error-message-container {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            width: 90%;
+            max-width: 800px;
+            z-index: 9999;
+            display: none;
+        }
+
+        .error-message-content {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .error-message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .error-message-title {
+            color: #333;
+            font-weight: 500;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .error-message-close {
+            background: none;
+            border: none;
+            color: #666;
+            cursor: pointer;
+            padding: 8px;
+            font-size: 1.2em;
+            border-radius: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .error-message-close:hover {
+            background: #f5f5f5;
+            color: #333;
+        }
+
+        .error-message-body {
+            color: #666;
+            word-break: break-all;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            font-family: monospace;
+            position: relative;
+        }
+
+        .copy-button {
+            position: absolute;
+            top: 8px;
+            right: 8px;
+            background: white;
+            border: none;
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.9em;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+
+        .copy-button:hover {
+            background: #f0f0f0;
+            transform: translateY(-1px);
+        }
+
+        .error-message-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 10px;
+        }
+
+        /* Section Headers */
+        .section-header h2 {
+            color: var(--text-green);
+        }
+
+        .text-muted {
+            color: var(--text-light-green) !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo"></div>
+                <h1 class="brand-name">Pulse Path</h1>
+            </div>
+            <div class="user-info">
+                <button id="sosButton" class="sos-button">
+                    <i class="fas fa-exclamation-circle"></i>
+                    SOS
+                </button>
+                <span id="userEmail"></span>
+                <button class="btn-logout" id="logoutButton">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link active">
+                <i class="fas fa-home"></i>
+                Dashboard
+            </a>
+            <a href="medications.html" class="nav-link">
+                <i class="fas fa-pills"></i>
+                Medications
+            </a>
+            <a href="caregivers.html" class="nav-link">
+                <i class="fas fa-user-nurse"></i>
+                Caregivers
+            </a>
+            <a href="appointments.html" class="nav-link">
+                <i class="fas fa-calendar-alt"></i>
+                Appointments
+            </a>
+            <a href="records.html" class="nav-link">
+                <i class="fas fa-file-medical"></i>
+                Records
+            </a>
+            <a href="profile.html" class="nav-link">
+                <i class="fas fa-user"></i>
+                Profile
+            </a>
+        </nav>
+
+        <!-- Dashboard Content -->
+        <div class="content-section">
+            <div class="section-header">
+                <h2>Dashboard</h2>
+                <div id="lastUpdated" class="text-muted"></div>
+            </div>
+
+            <div class="dashboard-grid">
+                <!-- Medications Summary -->
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <div class="dashboard-card-title">
+                            <i class="fas fa-pills"></i>
+                            Medications
+                        </div>
+                        <span class="dashboard-card-count" id="medicationCount">0</span>
+                    </div>
+                    <div id="medicationsList" class="dashboard-list">
+                        <div class="loading-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Loading medications...</p>
+                        </div>
+                    </div>
+                    <button class="btn-view-all" onclick="window.location.href='medications.html'">
+                        View All Medications
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Appointments Summary -->
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <div class="dashboard-card-title">
+                            <i class="fas fa-calendar-alt"></i>
+                            Upcoming Appointments
+                        </div>
+                        <span class="dashboard-card-count" id="appointmentCount">0</span>
+                    </div>
+                    <div id="appointmentsList" class="dashboard-list">
+                        <div class="loading-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Loading appointments...</p>
+                        </div>
+                    </div>
+                    <button class="btn-view-all" onclick="window.location.href='appointments.html'">
+                        View All Appointments
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Caregivers Summary -->
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <div class="dashboard-card-title">
+                            <i class="fas fa-user-nurse"></i>
+                            Caregivers
+                        </div>
+                        <span class="dashboard-card-count" id="caregiversCount">0</span>
+                    </div>
+                    <div id="caregiversList" class="dashboard-list">
+                        <div class="loading-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Loading caregivers...</p>
+                        </div>
+                    </div>
+                    <button class="btn-view-all" onclick="window.location.href='caregivers.html'">
+                        View All Caregivers
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+
+                <!-- Records Summary -->
+                <div class="dashboard-card">
+                    <div class="dashboard-card-header">
+                        <div class="dashboard-card-title">
+                            <i class="fas fa-file-medical"></i>
+                            Recent Records
+                        </div>
+                        <span class="dashboard-card-count" id="recordsCount">0</span>
+                    </div>
+                    <div id="recordsList" class="dashboard-list">
+                        <div class="loading-state">
+                            <i class="fas fa-spinner fa-spin"></i>
+                            <p>Loading records...</p>
+                        </div>
+                    </div>
+                    <button class="btn-view-all" onclick="window.location.href='records.html'">
+                        View All Records
+                        <i class="fas fa-arrow-right"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="notification" class="notification"></div>
+    <div id="errorDisplay" style="position: fixed; bottom: 20px; right: 20px; background: #ff6b6b; color: white; padding: 15px; border-radius: 8px; max-width: 80%; word-break: break-all; display: none;"></div>
+
+    <!-- Add the confirmation dialog HTML -->
+    <div id="sosConfirmation" class="confirmation-overlay">
+        <div class="confirmation-dialog">
+            <div class="warning-icon">⚠️</div>
+            <h2>Emergency SOS Alert</h2>
+            <p>This will immediately notify all your caregivers and emergency contacts. Are you sure you want to proceed?</p>
+            <div class="confirmation-buttons">
+                <button id="confirmSos" class="confirm-btn">Yes, Send Alert</button>
+                <button id="cancelSos" class="cancel-btn">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add the error message container HTML -->
+    <div class="error-message-container" id="errorMessageContainer">
+        <div class="error-message-content">
+            <div class="error-message-header">
+                <div class="error-message-title">
+                    <i class="fas fa-exclamation-circle"></i>
+                    <span>Error Message</span>
+                </div>
+                <button class="error-message-close" onclick="closeErrorMessage()">×</button>
+            </div>
+            <div class="error-message-body" id="errorMessageBody">
+                <button class="copy-button" onclick="copyErrorMessage()">
+                    <i class="fas fa-copy"></i>
+                    Copy
+                </button>
+                <div id="errorMessageText"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Firebase Modules -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+        import { getFirestore, collection, query, where, orderBy, limit, getDocs, addDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+        import { getAuth, onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+        import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-functions.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCx15WpXHMblJfhqP_nSDcR61NhhwZs1iY",
+            authDomain: "autoimmune-tracker.firebaseapp.com",
+            projectId: "autoimmune-tracker",
+            storageBucket: "autoimmune-tracker.appspot.com",
+            messagingSenderId: "141163406671",
+            appId: "1:141163406671:web:42160dfbcb44638239513a"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Initialize Firebase Functions
+        const functions = getFunctions(app);
+        const sendSOSEmail = httpsCallable(functions, 'sendSOSEmail');
+
+        // Function to show notifications
+        function showNotification(message, type = 'info') {
+            const notification = document.getElementById('notification');
+            notification.textContent = message;
+            notification.className = `notification ${type} show`;
+            setTimeout(() => notification.classList.remove('show'), 3000);
+        }
+
+        // Enhanced error display function
+        function showError(error) {
+            const errorDisplay = document.getElementById('errorDisplay');
+            errorDisplay.style.display = 'block';
+            errorDisplay.innerHTML = `
+                <h3>Error Details:</h3>
+                <p>${error.message}</p>
+                ${error.code ? `<p>Error Code: ${error.code}</p>` : ''}
+                ${error.details ? `<p>Details: ${error.details}</p>` : ''}
+                <button onclick="this.parentElement.style.display='none'" style="background: white; color: #ff6b6b; border: none; padding: 5px 10px; border-radius: 4px; margin-top: 10px;">Close</button>
+            `;
+        }
+
+        // Load dashboard data
+        async function loadDashboard() {
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    throw new Error('No user logged in');
+                }
+
+                // Update last updated time
+                document.getElementById('lastUpdated').textContent = `Last updated: ${new Date().toLocaleTimeString()}`;
+
+                try {
+                    // Load medications
+                    const medicationsQuery = query(
+                        collection(db, 'medications'),
+                        where('userId', '==', user.uid),
+                        orderBy('timestamp', 'desc'),
+                        limit(5)
+                    );
+                    const medicationsSnapshot = await getDocs(medicationsQuery);
+                    updateMedicationsList(medicationsSnapshot);
+                } catch (error) {
+                    console.error('Medications Error:', error);
+                    showError(error);
+                }
+
+                try {
+                    // Load appointments
+                    const appointmentsQuery = query(
+                        collection(db, 'appointments'),
+                        where('userId', '==', user.uid),
+                        orderBy('appointmentDate'),
+                        limit(5)
+                    );
+                    const appointmentsSnapshot = await getDocs(appointmentsQuery);
+                    updateAppointmentsList(appointmentsSnapshot);
+                } catch (error) {
+                    console.error('Appointments Error:', error);
+                    showError(error);
+                }
+
+                try {
+                    // Load caregivers
+                    const caregiversQuery = query(
+                        collection(db, 'caregivers'),
+                        where('userId', '==', user.uid),
+                        limit(5)
+                    );
+                    const caregiversSnapshot = await getDocs(caregiversQuery);
+                    updateCaregiversList(caregiversSnapshot);
+                } catch (error) {
+                    console.error('Caregivers Error:', error);
+                    showError(error);
+                }
+
+                try {
+                    // Load records
+                    const recordsQuery = query(
+                        collection(db, 'records'),
+                        where('userId', '==', user.uid),
+                        orderBy('timestamp', 'desc'),
+                        limit(5)
+                    );
+                    const recordsSnapshot = await getDocs(recordsQuery);
+                    updateRecordsList(recordsSnapshot);
+                } catch (error) {
+                    console.error('Records Error:', error);
+                    showError(error);
+                }
+
+            } catch (error) {
+                console.error('Dashboard Error:', error);
+                showError(error);
+                showNotification('Error loading dashboard: ' + error.message, 'error');
+            }
+        }
+
+        // Update medications list
+        function updateMedicationsList(snapshot) {
+            const container = document.getElementById('medicationsList');
+            document.getElementById('medicationCount').textContent = snapshot.size;
+
+            if (snapshot.empty) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>No medications found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = snapshot.docs.map(doc => {
+                const med = doc.data();
+                return `
+                    <div class="dashboard-list-item">
+                        <div class="dashboard-item-info">
+                            <span class="dashboard-item-title">${med.medicationName}</span>
+                            <span class="dashboard-item-subtitle">${med.dosage} - ${med.frequency}</span>
+                        </div>
+                        <span class="dashboard-item-status status-active">Active</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update appointments list
+        function updateAppointmentsList(snapshot) {
+            const container = document.getElementById('appointmentsList');
+            document.getElementById('appointmentCount').textContent = snapshot.size;
+
+            if (snapshot.empty) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>No upcoming appointments</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = snapshot.docs.map(doc => {
+                const apt = doc.data();
+                return `
+                    <div class="dashboard-list-item">
+                        <div class="dashboard-item-info">
+                            <span class="dashboard-item-title">${apt.appointmentType}</span>
+                            <span class="dashboard-item-subtitle">${apt.appointmentDate} at ${apt.appointmentTime}</span>
+                        </div>
+                        <span class="dashboard-item-status status-upcoming">Upcoming</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update caregivers list
+        function updateCaregiversList(snapshot) {
+            const container = document.getElementById('caregiversList');
+            document.getElementById('caregiversCount').textContent = snapshot.size;
+
+            if (snapshot.empty) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>No caregivers found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = snapshot.docs.map(doc => {
+                const caregiver = doc.data();
+                return `
+                    <div class="dashboard-list-item">
+                        <div class="dashboard-item-info">
+                            <span class="dashboard-item-title">${caregiver.name}</span>
+                            <span class="dashboard-item-subtitle">${caregiver.role}</span>
+                        </div>
+                        <span class="dashboard-item-status status-active">Active</span>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Update records list
+        function updateRecordsList(snapshot) {
+            const container = document.getElementById('recordsList');
+            document.getElementById('recordsCount').textContent = snapshot.size;
+
+            if (snapshot.empty) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <p>No records found</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = snapshot.docs.map(doc => {
+                const record = doc.data();
+                return `
+                    <div class="dashboard-list-item">
+                        <div class="dashboard-item-info">
+                            <span class="dashboard-item-title">${record.title}</span>
+                            <span class="dashboard-item-subtitle">${new Date(record.timestamp.toDate()).toLocaleDateString()}</span>
+                        </div>
+                        <i class="fas fa-chevron-right"></i>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // Initialize
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                document.getElementById('userEmail').textContent = user.email;
+                await loadDashboard();
+                // Refresh dashboard every 5 minutes
+                setInterval(loadDashboard, 300000);
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Handle logout
+        document.getElementById('logoutButton').addEventListener('click', async () => {
+            try {
+                await auth.signOut();
+                window.location.href = 'login.html';
+            } catch (error) {
+                console.error('Error signing out:', error);
+                showNotification('Error signing out: ' + error.message, 'error');
+            }
+        });
+
+        // SOS Button Functionality
+        document.getElementById('sosButton').addEventListener('click', function() {
+            document.getElementById('sosConfirmation').style.display = 'flex';
+        });
+
+        document.getElementById('cancelSos').addEventListener('click', function() {
+            document.getElementById('sosConfirmation').style.display = 'none';
+        });
+
+        document.getElementById('confirmSos').addEventListener('click', async function() {
+            const sosButton = document.getElementById('sosButton');
+            const confirmationDialog = document.getElementById('sosConfirmation');
+            
+            try {
+                const user = auth.currentUser;
+                if (!user) {
+                    throw new Error('No user logged in');
+                }
+
+                // Add visual feedback
+                sosButton.classList.add('pulsing');
+                confirmationDialog.style.display = 'none';
+
+                // Get user's caregivers
+                const caregiversQuery = query(
+                    collection(db, 'caregivers'),
+                    where('userId', '==', user.uid)
+                );
+                const caregiversSnapshot = await getDocs(caregiversQuery);
+                
+                if (caregiversSnapshot.empty) {
+                    showNotification('No caregivers found. Please add caregivers in the Caregivers section.', 'warning');
+                    return;
+                }
+
+                // Get user's location if available
+                let location = null;
+                if (navigator.geolocation) {
+                    try {
+                        const position = await new Promise((resolve, reject) => {
+                            navigator.geolocation.getCurrentPosition(resolve, reject);
+                        });
+                        location = {
+                            latitude: position.coords.latitude,
+                            longitude: position.coords.longitude,
+                            googleMapsUrl: `https://www.google.com/maps?q=${position.coords.latitude},${position.coords.longitude}`
+                        };
+                    } catch (error) {
+                        console.error('Error getting location:', error);
+                    }
+                }
+
+                // Create emergency alert in Firestore
+                const emergencyAlert = {
+                    userId: user.uid,
+                    userEmail: user.email,
+                    timestamp: new Date(),
+                    status: 'active',
+                    location: location,
+                    caregivers: caregiversSnapshot.docs.map(doc => ({
+                        id: doc.id,
+                        ...doc.data()
+                    }))
+                };
+
+                // Add emergency alert to Firestore
+                const alertRef = await addDoc(collection(db, 'emergencyAlerts'), emergencyAlert);
+
+                // Send email to each caregiver
+                const emailPromises = caregiversSnapshot.docs.map(async (doc) => {
+                    const caregiver = doc.data();
+                    try {
+                        await sendSOSEmail({
+                            caregiverId: doc.id,
+                            caregiverEmail: caregiver.email,
+                            caregiverName: caregiver.name,
+                            patientName: user.displayName || user.email,
+                            patientEmail: user.email,
+                            alertId: alertRef.id,
+                            location: location,
+                            timestamp: new Date().toISOString()
+                        });
+                    } catch (error) {
+                        console.error(`Error sending email to caregiver ${caregiver.name}:`, error);
+                        throw error;
+                    }
+                });
+
+                // Wait for all emails to be sent
+                await Promise.all(emailPromises);
+
+                showNotification('Emergency alert sent successfully. Caregivers have been notified.', 'success');
+            } catch (error) {
+                console.error('SOS Error:', error);
+                showError(error);
+                showNotification('Error sending emergency alert: ' + error.message, 'error');
+            } finally {
+                sosButton.classList.remove('pulsing');
+            }
+        });
+
+        // Close confirmation when clicking outside the dialog
+        document.getElementById('sosConfirmation').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.style.display = 'none';
+            }
+        });
+
+        // Add these functions to your existing script section
+        function showErrorMessage(message) {
+            const container = document.getElementById('errorMessageContainer');
+            const messageText = document.getElementById('errorMessageText');
+            messageText.textContent = message;
+            container.style.display = 'block';
+        }
+
+        function closeErrorMessage() {
+            document.getElementById('errorMessageContainer').style.display = 'none';
+        }
+
+        function copyErrorMessage() {
+            const messageText = document.getElementById('errorMessageText').textContent;
+            navigator.clipboard.writeText(messageText).then(() => {
+                const copyButton = document.querySelector('.copy-button');
+                const originalText = copyButton.innerHTML;
+                copyButton.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                setTimeout(() => {
+                    copyButton.innerHTML = originalText;
+                }, 2000);
+            });
+        }
+
+        // Modify your error handling to use this new display
+        window.onerror = function(msg, url, lineNo, columnNo, error) {
+            const message = error?.message || msg;
+            showErrorMessage(message);
+            return false;
+        };
+
+        // Add this to your Firebase error handling
+        function handleFirebaseError(error) {
+            showErrorMessage(error.message);
+        }
+    </script>
+</body>
+</html>

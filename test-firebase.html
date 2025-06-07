@@ -1,0 +1,514 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pulse Path Healthcare</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Form and container styles */
+        .form-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        /* Data display styles */
+        .data-section {
+            margin-top: 30px;
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+        }
+
+        .data-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e9ecef;
+        }
+
+        .data-list {
+            margin-top: 20px;
+            padding: 15px;
+            background: white;
+            border-radius: 8px;
+            min-height: 100px;
+        }
+
+        .data-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-left: 4px solid #2196F3;
+        }
+
+        .data-item h3 {
+            margin: 0 0 10px 0;
+            color: #2196F3;
+        }
+
+        .data-item p {
+            margin: 5px 0;
+            color: #666;
+        }
+
+        .data-item .timestamp {
+            font-size: 12px;
+            color: #999;
+            margin-top: 10px;
+        }
+
+        /* Loading and empty states */
+        .loading-state, .empty-state, .error-state {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+        }
+
+        .loading-state i, .empty-state i, .error-state i {
+            font-size: 24px;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .loading-state i {
+            color: #2196F3;
+        }
+
+        .empty-state i {
+            color: #ccc;
+        }
+
+        .error-state i {
+            color: #f44336;
+        }
+
+        /* Button styles */
+        .btn-primary {
+            background: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin-top: 10px;
+        }
+
+        .btn-primary:hover {
+            background: #1976D2;
+        }
+
+        /* Tab content styles */
+        .tab-content {
+            display: none;
+            padding: 20px;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .btn-primary, .btn-view {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: #2196F3;
+            color: white;
+        }
+
+        .btn-view {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        .btn-primary:hover, .btn-view:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+        }
+
+        .btn-primary:hover {
+            background-color: #1976D2;
+        }
+
+        .btn-view:hover {
+            background-color: #45a049;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #2196F3;
+            box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.1);
+        }
+
+        .data-list {
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <div class="logo"></div>
+                <h1 class="brand-name">Pulse Path</h1>
+            </div>
+            <div class="user-info">
+                <span id="userEmail"></span>
+                <button class="btn-logout" id="logoutButton">
+                    <i class="fas fa-sign-out-alt"></i>
+                    Logout
+                </button>
+            </div>
+        </header>
+
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                Dashboard
+            </a>
+            <a href="#" class="nav-link" onclick="showTab('profile')">
+                <i class="fas fa-user"></i>
+                Profile
+            </a>
+            <a href="#" class="nav-link" onclick="showTab('medications')">
+                <i class="fas fa-pills"></i>
+                Medications
+            </a>
+            <a href="#" class="nav-link" onclick="showTab('appointments')">
+                <i class="fas fa-calendar-alt"></i>
+                Appointments
+            </a>
+            <a href="#" class="nav-link" onclick="showTab('caregivers')">
+                <i class="fas fa-user-nurse"></i>
+                Caregivers
+            </a>
+        </nav>
+
+        <div class="main-content">
+            <!-- Profile Tab -->
+            <div id="profile" class="tab-content">
+                <div class="form-container">
+                    <h2>Add Profile Information</h2>
+                    <input type="text" id="profileName" placeholder="Name" class="form-input" required>
+                    <input type="number" id="profileAge" placeholder="Age" class="form-input">
+                    <textarea id="profileMedicalHistory" placeholder="Medical History" class="form-input" rows="4"></textarea>
+                    <div class="action-buttons">
+                        <button onclick="saveProfile()" class="btn-primary">Save Profile</button>
+                        <button onclick="viewData('profiles')" class="btn-view">View Profiles</button>
+                    </div>
+                </div>
+                <div id="profilesList" class="data-list"></div>
+            </div>
+
+            <!-- Medications Tab -->
+            <div id="medications" class="tab-content">
+                <div class="form-container">
+                    <h2>Add Medication</h2>
+                    <input type="text" id="medName" placeholder="Medication Name" class="form-input" required>
+                    <input type="text" id="medDosage" placeholder="Dosage" class="form-input">
+                    <input type="text" id="medSchedule" placeholder="Schedule" class="form-input">
+                    <div class="action-buttons">
+                        <button onclick="saveMedication()" class="btn-primary">Save Medication</button>
+                        <button onclick="viewData('medications')" class="btn-view">View Medications</button>
+                    </div>
+                </div>
+                <div id="medicationsList" class="data-list"></div>
+            </div>
+
+            <!-- Appointments Tab -->
+            <div id="appointments" class="tab-content">
+                <div class="form-container">
+                    <h2>Add Appointment</h2>
+                    <input type="text" id="doctor" placeholder="Doctor Name" class="form-input" required>
+                    <input type="date" id="date" class="form-input" required>
+                    <textarea id="notes" placeholder="Notes" class="form-input" rows="3"></textarea>
+                    <div class="action-buttons">
+                        <button onclick="saveAppointment()" class="btn-primary">Save Appointment</button>
+                        <button onclick="viewData('appointments')" class="btn-view">View Appointments</button>
+                    </div>
+                </div>
+                <div id="appointmentsList" class="data-list"></div>
+            </div>
+
+            <!-- Caregivers Tab -->
+            <div id="caregivers" class="tab-content">
+                <div class="form-container">
+                    <h2>Add Caregiver</h2>
+                    <input type="text" id="caregiverName" placeholder="Caregiver Name" class="form-input" required>
+                    <input type="text" id="relationship" placeholder="Relationship" class="form-input">
+                    <input type="tel" id="contact" placeholder="Contact Number" class="form-input" required>
+                    <div class="action-buttons">
+                        <button onclick="saveCaregiver()" class="btn-primary">Save Caregiver</button>
+                        <button onclick="viewData('caregivers')" class="btn-view">View Caregivers</button>
+                    </div>
+                </div>
+                <div id="caregiversList" class="data-list"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SOS Button -->
+    <button class="sos-button" onclick="triggerSOS()">
+        <i class="fas fa-exclamation-triangle sos-icon"></i>
+        <span class="sos-text">SOS</span>
+    </button>
+
+    <div id="notification" class="notification"></div>
+
+    <!-- Script imports -->
+    <script type="module">
+        import { auth } from './firebase-config.js';
+        import { saveData, getData, formatData } from './firebase-service.js';
+        import { handleLogout } from './firebase-auth.js';
+        import { onAuthStateChanged } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+
+        let currentUser = null;
+
+        // Initialize authentication and setup UI
+        document.addEventListener('DOMContentLoaded', () => {
+            console.group('Application Initialization');
+            
+            onAuthStateChanged(auth, (user) => {
+                if (user) {
+                    currentUser = user;
+                    console.log('User authenticated:', user.email);
+                    document.getElementById('userEmail').textContent = user.email;
+                    showTab('profile');
+                } else {
+                    console.log('No user authenticated, redirecting to login');
+                    window.location.href = 'login.html';
+                }
+            });
+            
+            console.groupEnd();
+        });
+
+        // Tab navigation with data loading
+        window.showTab = async function(tabId) {
+            console.group(`Tab Navigation: ${tabId}`);
+            
+            try {
+                // Update UI
+                document.querySelectorAll('.tab-content').forEach(tab => {
+                    tab.style.display = 'none';
+                    tab.classList.remove('active');
+                });
+                const currentTab = document.getElementById(tabId);
+                currentTab.style.display = 'block';
+                currentTab.classList.add('active');
+                
+                // Load data for the tab
+                await viewData(tabId);
+            } catch (error) {
+                console.error('Error switching tabs:', error);
+                alert('Error loading data: ' + error.message);
+            } finally {
+                console.groupEnd();
+            }
+        };
+
+        // View data function with loading state
+        window.viewData = async function(collection) {
+            console.group(`Loading ${collection} data`);
+            const dataList = document.getElementById(collection + 'List');
+            
+            try {
+                // Show loading state
+                dataList.innerHTML = `
+                    <div class="loading-state">
+                        <i class="fas fa-spinner fa-spin"></i>
+                        <p>Loading ${collection}...</p>
+                    </div>
+                `;
+                
+                // Load data
+                console.log('Fetching data from collection:', collection);
+                const data = await getData(collection);
+                console.log(`Retrieved ${data.length} items:`, data);
+
+                // Update UI
+                if (data.length === 0) {
+                    dataList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-inbox"></i>
+                            <p>No ${collection} found. Add some using the form above.</p>
+                        </div>
+                    `;
+                } else {
+                    dataList.innerHTML = '';
+                    data.forEach(item => {
+                        console.log('Formatting item:', item);
+                        const formattedHtml = formatData(item, collection);
+                        console.log('Formatted HTML:', formattedHtml);
+                        dataList.innerHTML += formattedHtml;
+                    });
+                }
+            } catch (error) {
+                console.error('Error loading data:', error);
+                dataList.innerHTML = `
+                    <div class="error-state">
+                        <i class="fas fa-exclamation-triangle"></i>
+                        <p>Error: ${error.message}</p>
+                    </div>
+                `;
+            } finally {
+                console.groupEnd();
+            }
+        };
+
+        // Save functions with proper validation and error handling
+        window.saveProfile = async function() {
+            console.group('Saving Profile');
+            try {
+                const name = document.getElementById('profileName').value.trim();
+                const age = document.getElementById('profileAge').value.trim();
+                const medicalHistory = document.getElementById('profileMedicalHistory').value.trim();
+
+                if (!name) {
+                    throw new Error('Name is required');
+                }
+
+                await saveData('profiles', { name, age, medicalHistory });
+
+                // Clear form
+                document.getElementById('profileName').value = '';
+                document.getElementById('profileAge').value = '';
+                document.getElementById('profileMedicalHistory').value = '';
+
+                // Refresh data display
+                await viewData('profiles');
+                alert('Profile saved successfully!');
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                alert(error.message);
+            } finally {
+                console.groupEnd();
+            }
+        };
+
+        window.saveMedication = async function() {
+            console.group('Saving Medication');
+            try {
+                const name = document.getElementById('medName').value.trim();
+                const dosage = document.getElementById('medDosage').value.trim();
+                const schedule = document.getElementById('medSchedule').value.trim();
+
+                if (!name) {
+                    throw new Error('Medication name is required');
+                }
+
+                await saveData('medications', { name, dosage, schedule });
+
+                // Clear form
+                document.getElementById('medName').value = '';
+                document.getElementById('medDosage').value = '';
+                document.getElementById('medSchedule').value = '';
+
+                // Refresh data display
+                await viewData('medications');
+                alert('Medication saved successfully!');
+        } catch (error) {
+                console.error('Error saving medication:', error);
+                alert(error.message);
+            } finally {
+                console.groupEnd();
+            }
+        };
+
+        window.saveAppointment = async function() {
+            console.group('Saving Appointment');
+            try {
+                const doctor = document.getElementById('doctor').value.trim();
+                const date = document.getElementById('date').value.trim();
+                const notes = document.getElementById('notes').value.trim();
+
+                if (!doctor || !date) {
+                    throw new Error('Doctor name and date are required');
+                }
+
+                await saveData('appointments', { doctor, date, notes });
+
+                // Clear form
+                document.getElementById('doctor').value = '';
+                document.getElementById('date').value = '';
+                document.getElementById('notes').value = '';
+
+                // Refresh data display
+                await viewData('appointments');
+                alert('Appointment saved successfully!');
+            } catch (error) {
+                console.error('Error saving appointment:', error);
+                alert(error.message);
+            } finally {
+                console.groupEnd();
+            }
+        };
+
+        window.saveCaregiver = async function() {
+            console.group('Saving Caregiver');
+            try {
+                const name = document.getElementById('caregiverName').value.trim();
+                const relationship = document.getElementById('relationship').value.trim();
+                const contact = document.getElementById('contact').value.trim();
+
+                if (!name || !contact) {
+                    throw new Error('Name and contact information are required');
+                }
+
+                await saveData('caregivers', { name, relationship, contact });
+
+                // Clear form
+                document.getElementById('caregiverName').value = '';
+                document.getElementById('relationship').value = '';
+                document.getElementById('contact').value = '';
+
+                // Refresh data display
+                await viewData('caregivers');
+                alert('Caregiver saved successfully!');
+            } catch (error) {
+                console.error('Error saving caregiver:', error);
+                alert(error.message);
+            } finally {
+                console.groupEnd();
+            }
+        };
+
+        // Set up logout handler
+        document.getElementById('logoutButton').addEventListener('click', handleLogout);
+
+        // SOS function
+        window.triggerSOS = function() {
+            alert('Emergency services have been notified');
+        };
+    </script>
+</body>
+</html> 

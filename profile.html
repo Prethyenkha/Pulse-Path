@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile - Pulse Path Healthcare</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        /* Color Variables */
+        :root {
+            --primary-green: #4CAF50;
+            --dark-green: #2e7d32;
+            --light-green: #81c784;
+            --lighter-green: #c8e6c9;
+            --text-green: #1b5e20;
+            --text-light-green: #43a047;
+        }
+
+        /* Global Styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #ffffff;
+            color: var(--text-green);
+            line-height: 1.6;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        header {
+            background: #ffffff;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 15px 30px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .brand-name {
+            background: linear-gradient(45deg, var(--dark-green), var(--primary-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2em;
+            font-weight: bold;
+        }
+
+        /* Navigation */
+        .main-nav {
+            background: white;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            display: flex;
+            gap: 20px;
+        }
+
+        .nav-link {
+            text-decoration: none;
+            color: var(--text-light-green);
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .nav-link:hover {
+            background: var(--lighter-green);
+            color: var(--primary-green);
+        }
+
+        .nav-link.active {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        /* Profile Section */
+        .profile-section {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            padding: 30px;
+            margin: 20px;
+        }
+
+        .profile-header {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .profile-avatar {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            background: #f5f5f5;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+            color: var(--primary-green);
+        }
+
+        .profile-info h1 {
+            color: var(--text-green);
+            margin-bottom: 10px;
+        }
+
+        .profile-info p {
+            color: var(--text-light-green);
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: var(--text-green);
+            font-weight: 500;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid var(--lighter-green);
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s ease;
+            color: var(--text-green);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-green);
+        }
+
+        /* Button Styles */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: var(--primary-green);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--dark-green);
+        }
+
+        .btn-secondary {
+            background: var(--lighter-green);
+            color: var(--text-green);
+        }
+
+        .btn-secondary:hover {
+            background: var(--light-green);
+            color: white;
+        }
+
+        /* Notification */
+        .notification {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            padding: 20px;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+            transform: translateY(150px);
+            opacity: 0;
+            transition: all 0.4s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            min-width: 350px;
+            max-width: 600px;
+            z-index: 9999;
+            pointer-events: none;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        .notification.success {
+            border-left: 4px solid var(--primary-green);
+        }
+
+        .notification.error {
+            border-left: 6px solid #f44336;
+        }
+
+        .notification-message {
+            flex-grow: 1;
+            margin-right: 15px;
+            word-break: break-word;
+            font-size: 1.1em;
+            line-height: 1.4;
+            color: var(--text-green);
+            user-select: text;
+        }
+
+        .notification-close {
+            background: none;
+            border: none;
+            color: var(--text-light-green);
+            cursor: pointer;
+            padding: 8px;
+            font-size: 1.4em;
+            line-height: 1;
+            transition: all 0.3s ease;
+            border-radius: 4px;
+        }
+
+        .notification-close:hover {
+            color: var(--text-green);
+            background: var(--lighter-green);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .profile-header {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .main-nav {
+                flex-wrap: wrap;
+            }
+
+            .nav-link {
+                flex: 1 1 auto;
+                text-align: center;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo-container">
+                <h1 class="brand-name">Pulse Path</h1>
+            </div>
+        </header>
+
+        <nav class="main-nav">
+            <a href="index.html" class="nav-link">
+                <i class="fas fa-home"></i>
+                Dashboard
+            </a>
+            <a href="medications.html" class="nav-link">
+                <i class="fas fa-pills"></i>
+                Medications
+            </a>
+            <a href="caregivers.html" class="nav-link">
+                <i class="fas fa-user-nurse"></i>
+                Caregivers
+            </a>
+            <a href="appointments.html" class="nav-link">
+                <i class="fas fa-calendar-alt"></i>
+                Appointments
+            </a>
+            <a href="records.html" class="nav-link">
+                <i class="fas fa-file-medical"></i>
+                Records
+            </a>
+            <a href="profile.html" class="nav-link active">
+                <i class="fas fa-user"></i>
+                Profile
+            </a>
+        </nav>
+
+        <div class="profile-section">
+            <div class="profile-header">
+                <div class="profile-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="profile-info">
+                    <h1>Profile Settings</h1>
+                    <p>Manage your personal information and preferences</p>
+                </div>
+            </div>
+
+            <form id="profileForm">
+                <div class="form-group">
+                    <label for="fullName">Full Name</label>
+                    <input type="text" id="fullName" class="form-control" placeholder="Enter your full name">
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Email Address</label>
+                    <input type="email" id="email" class="form-control" placeholder="Enter your email" readonly>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Phone Number</label>
+                    <input type="tel" id="phone" class="form-control" placeholder="Enter your phone number">
+                </div>
+
+                <div class="form-group">
+                    <label for="dateOfBirth">Date of Birth</label>
+                    <input type="date" id="dateOfBirth" class="form-control">
+                </div>
+
+                <div class="form-group">
+                    <label for="emergencyContact">Emergency Contact</label>
+                    <input type="text" id="emergencyContact" class="form-control" placeholder="Enter emergency contact name">
+                </div>
+
+                <div class="form-group">
+                    <label for="emergencyPhone">Emergency Contact Phone</label>
+                    <input type="tel" id="emergencyPhone" class="form-control" placeholder="Enter emergency contact phone">
+                </div>
+
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
+                    <button type="button" class="btn btn-secondary" id="changePasswordBtn">Change Password</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div id="notification" class="notification" role="alert">
+        <div class="notification-message"></div>
+        <button class="notification-close" aria-label="Close notification">×</button>
+    </div>
+
+    <!-- Firebase Scripts -->
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js';
+        import { getAuth, onAuthStateChanged, updateProfile, updatePassword } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js';
+        import { getFirestore, doc, getDoc, setDoc } from 'https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js';
+
+        // Firebase configuration
+        const firebaseConfig = {
+            apiKey: "AIzaSyCx15WpXHMblJfhqP_nSDcR61NhhwZs1iY",
+            authDomain: "autoimmune-tracker.firebaseapp.com",
+            projectId: "autoimmune-tracker",
+            storageBucket: "autoimmune-tracker.appspot.com",
+            messagingSenderId: "141163406671",
+            appId: "1:141163406671:web:42160dfbcb44638239513a"
+        };
+
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Show notification function
+        function showNotification(message, type = 'success') {
+            const notification = document.getElementById('notification');
+            const messageElement = notification.querySelector('.notification-message');
+            
+            // Clear any existing timeout
+            if (notification.timeout) {
+                clearTimeout(notification.timeout);
+            }
+            
+            // Update message and show notification
+            messageElement.textContent = message;
+            notification.className = `notification ${type} show`;
+            
+            // Set a longer timeout (15 seconds)
+            notification.timeout = setTimeout(() => {
+                hideNotification();
+            }, 15000);
+        }
+
+        // Hide notification function
+        function hideNotification() {
+            const notification = document.getElementById('notification');
+            notification.classList.remove('show');
+        }
+
+        // Add close button handler
+        document.querySelector('.notification-close').addEventListener('click', () => {
+            hideNotification();
+        });
+
+        // Prevent notification from closing when clicking on the message
+        document.querySelector('.notification-message').addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+
+        // Load profile data
+        async function loadProfileData(user) {
+            try {
+                const profileDoc = await getDoc(doc(db, 'users', user.uid));
+                const profileData = profileDoc.data() || {};
+
+                document.getElementById('fullName').value = user.displayName || '';
+                document.getElementById('email').value = user.email || '';
+                document.getElementById('phone').value = profileData.phone || '';
+                document.getElementById('dateOfBirth').value = profileData.dateOfBirth || '';
+                document.getElementById('emergencyContact').value = profileData.emergencyContact || '';
+                document.getElementById('emergencyPhone').value = profileData.emergencyPhone || '';
+            } catch (error) {
+                console.error('Error loading profile:', error);
+                showNotification('Error loading profile data', 'error');
+            }
+        }
+
+        // Save profile data
+        async function saveProfileData(e) {
+            e.preventDefault();
+            const user = auth.currentUser;
+
+            if (!user) {
+                showNotification('No user logged in', 'error');
+                return;
+            }
+
+            try {
+                // Update display name in Auth
+                await updateProfile(user, {
+                    displayName: document.getElementById('fullName').value
+                });
+
+                // Update profile data in Firestore
+                await setDoc(doc(db, 'users', user.uid), {
+                    phone: document.getElementById('phone').value,
+                    dateOfBirth: document.getElementById('dateOfBirth').value,
+                    emergencyContact: document.getElementById('emergencyContact').value,
+                    emergencyPhone: document.getElementById('emergencyPhone').value,
+                    updatedAt: new Date()
+                }, { merge: true });
+
+                showNotification('Profile updated successfully');
+            } catch (error) {
+                console.error('Error saving profile:', error);
+                showNotification('Error saving profile data', 'error');
+            }
+        }
+
+        // Change password handler
+        document.getElementById('changePasswordBtn').addEventListener('click', async () => {
+            const newPassword = prompt('Enter new password:');
+            if (!newPassword) return;
+
+            try {
+                const user = auth.currentUser;
+                await updatePassword(user, newPassword);
+                showNotification('Password updated successfully');
+            } catch (error) {
+                console.error('Error updating password:', error);
+                showNotification('Error updating password', 'error');
+            }
+        });
+
+        // Initialize
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                loadProfileData(user);
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
+
+        // Form submit handler
+        document.getElementById('profileForm').addEventListener('submit', saveProfileData);
+    </script>
+</body>
+</html> 
