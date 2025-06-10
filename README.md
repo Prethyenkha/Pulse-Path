@@ -17,10 +17,10 @@ A comprehensive web application for managing healthcare services, appointments, 
 
 ## Technologies Used
 
-- Frontend: React.js
-- Backend: Node.js
-- Database: MongoDB
-- Authentication: JWT
+- Frontend: HTML, CSS, Java Script
+- Backend: Firebase
+- Database: Firebase database
+- Authentication: Firebase authentication
 
 ## Getting Started
 
